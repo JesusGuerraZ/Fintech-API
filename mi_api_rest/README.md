@@ -73,7 +73,7 @@ curl -X POST http://localhost:8000/api/transactions/ \
 ## Logs de Transacciones
 
 Cada vez que se crea una transacción, se registra un log tanto en la consola del worker Celery como en el archivo `logs/transactions.log`.
-Este archivo se genera y actualiza dentro del contenedor Docker, pero si el volumen de la carpeta `logs`.
+Este archivo se genera y actualiza dentro del contenedor Docker.
 ### 4. Realizar una transferencia
 
 Primero crea una segunda cuenta:
