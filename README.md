@@ -1,3 +1,4 @@
+
 ## Requisitos
 
 - Python 3.8 o superior
@@ -37,6 +38,7 @@ No necesitas ejecutar comandos adicionales para Celery, ya que el worker se inic
 
 A continuación se muestra cómo interactuar con la API paso a paso usando `curl`:
 
+
 ### 1. Crear una cuenta
 
 ```bash
@@ -48,6 +50,19 @@ curl -X POST http://localhost:8000/api/accounts/ \
 		"currency": "USD"
 	}'
 ```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "owner_name": "Juan Pérez",
+  "balance": 1000.0,
+  "currency": "USD",
+  "created_at": "2025-10-24T12:00:00Z",
+  "updated_at": "2025-10-24T12:00:00Z"
+}
+```
+
 
 ### 2. Realizar un depósito
 
@@ -62,6 +77,19 @@ curl -X POST http://localhost:8000/api/transactions/ \
 	}'
 ```
 
+**Response:**
+```json
+{
+  "id": 1,
+  "account": 1,
+  "amount": 500.0,
+  "type": "deposit",
+  "description": "Depósito inicial",
+  "created_at": "2025-10-24T12:01:00Z"
+}
+```
+
+
 ### 3. Realizar un retiro
 
 ```bash
@@ -75,10 +103,23 @@ curl -X POST http://localhost:8000/api/transactions/ \
 	}'
 ```
 
+**Response:**
+```json
+{
+  "id": 2,
+  "account": 1,
+  "amount": 200.0,
+  "type": "withdrawal",
+  "description": "Retiro de efectivo",
+  "created_at": "2025-10-24T12:02:00Z"
+}
+```
+
 ## Logs de Transacciones
 
 Cada vez que se crea una transacción, se registra un log tanto en la consola del worker Celery como en el archivo `logs/transactions.log`.
-Este archivo se genera y actualiza dentro del contenedor Docker, pero si el volumen de la carpeta `logs` está correctamente montado en Docker Compose, podrás ver los cambios reflejados también en tu máquina local y en Visual Studio Code.
+Este archivo se genera y actualiza dentro del contenedor Docker.
+
 ### 4. Realizar una transferencia
 
 Primero crea una segunda cuenta:
@@ -93,6 +134,18 @@ curl -X POST http://localhost:8000/api/accounts/ \
 	}'
 ```
 
+**Response:**
+```json
+{
+  "id": 2,
+  "owner_name": "Ana López",
+  "balance": 500.0,
+  "currency": "USD",
+  "created_at": "2025-10-24T12:03:00Z",
+  "updated_at": "2025-10-24T12:03:00Z"
+}
+```
+
 Luego realiza la transferencia de la cuenta 1 a la cuenta 2:
 
 ```bash
@@ -105,4 +158,61 @@ curl -X POST http://localhost:8000/api/transactions/ \
 		"destination_account": 2,
 		"description": "Transferencia a Ana"
 	}'
+```
+
+**Response:**
+```json
+{
+  "id": 3,
+  "account": 1,
+  "amount": 100.0,
+  "type": "transfer",
+  "destination_account": 2,
+  "description": "Transferencia a Ana",
+  "created_at": "2025-10-24T12:04:00Z"
+}
+```
+### Ejemplo de error: saldo insuficiente
+
+Si intentas realizar un retiro o transferencia y la cuenta no tiene suficiente saldo, la API responderá así:
+
+#### Retiro con saldo insuficiente
+
+```bash
+curl -X POST http://localhost:8000/api/transactions/ \
+		-H "Content-Type: application/json" \
+		-d '{
+				"account": 1,
+				"amount": 99999,
+				"type": "withdrawal",
+				"description": "Intento de retiro sin fondos"
+		}'
+```
+
+**Response:**
+```json
+{
+	"detail": "Saldo insuficiente para el retiro."
+}
+```
+
+#### Transferencia con saldo insuficiente
+
+```bash
+curl -X POST http://localhost:8000/api/transactions/ \
+		-H "Content-Type: application/json" \
+		-d '{
+				"account": 1,
+				"amount": 99999,
+				"type": "transfer",
+				"destination_account": 2,
+				"description": "Intento de transferencia sin fondos"
+		}'
+```
+
+**Response:**
+```json
+{
+	"detail": "Saldo insuficiente para la transferencia."
+}
 ```
