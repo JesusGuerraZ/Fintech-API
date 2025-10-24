@@ -1,0 +1,71 @@
+[
+  {
+    "model": "api.account",
+    "pk": 1,
+    "fields": {
+      "owner_name": "Juan",
+      "balance": "1000.00",
+      "currency": "USD",
+      "created_at": "2025-10-23T00:00:00Z",
+      "updated_at": "2025-10-23T00:00:00Z"
+    }
+  },
+  {
+    "model": "api.account",
+    "pk": 2,
+    "fields": {
+      "owner_name": "Ana",
+      "balance": "500.00",
+      "currency": "EUR",
+      "created_at": "2025-10-23T00:00:00Z",
+      "updated_at": "2025-10-23T00:00:00Z"
+    }
+  },
+  {
+    "model": "api.account",
+    "pk": 3,
+    "fields": {
+      "owner_name": "Luis",
+      "balance": "750.00",
+      "currency": "COP",
+      "created_at": "2025-10-23T00:00:00Z",
+      "updated_at": "2025-10-23T00:00:00Z"
+    }
+  },
+  {
+    "model": "api.transaction",
+    "pk": 1,
+    "fields": {
+      "account": 1,
+      "amount": "200.00",
+      "type": "deposit",
+      "description": "Depósito inicial",
+      "created_at": "2025-10-23T01:00:00Z",
+      "destination_account": null
+    }
+  },
+  {
+    "model": "api.transaction",
+    "pk": 2,
+    "fields": {
+      "account": 2,
+      "amount": "100.00",
+      "type": "withdrawal",
+      "description": "Retiro de efectivo",
+      "created_at": "2025-10-23T02:00:00Z",
+      "destination_account": null
+    }
+  },
+  {
+    "model": "api.transaction",
+    "pk": 3,
+    "fields": {
+      "account": 1,
+      "amount": "50.00",
+      "type": "transfer",
+      "description": "Transferencia a Ana",
+      "created_at": "2025-10-23T03:00:00Z",
+      "destination_account": 2
+    }
+  }
+]
