@@ -7,7 +7,12 @@
 
 ## Uso
 
+
 Para ejecutar todo el proyecto (API, base de datos, Redis y worker Celery) simplemente usa Docker Compose:
+
+```
+cd mi_api_rest
+```
 
 ```
 docker-compose up --build
